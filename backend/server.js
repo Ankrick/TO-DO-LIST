@@ -4,9 +4,11 @@ require('dotenv').config({ path: './PORT.env'});
 const mongoose = require('mongoose');
 const url = "mongodb+srv://Tristan:tristan@mern-cluster.rxfy8oz.mongodb.net/?retryWrites=true&w=majority&appName=MERN-Cluster"
 const authRoutes = require('./routes/auth');
+const todoRoutes = require('./routes/todos');
 
 app.use(express.json());
 app.use('/user', authRoutes);
+app.use('/todo', todoRoutes);
 
 app.get('/', (req, res) => {
     return res.json({ msg: "hello"})
