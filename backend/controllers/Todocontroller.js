@@ -6,9 +6,10 @@ const todo = require('../models/todo');
 const TodoController = {
     index: async(req,res) => {
         try{
-            const{ email } = req.body
-            const exisitingUser = await User.findOne({email});
+            let name = req.params.id
+            const exisitingUser = await User.findOne({name});
             const todos = await Todo.find({user: exisitingUser});
+            
             if(!todos){
                 res.status(404).json({msg : 'Empty Todos List'})
             }
@@ -19,13 +20,16 @@ const TodoController = {
     },
     create: async(req,res) => {
         try {
-            const { title, body, email } = req.body
-            const exisitingUser = await User.findOne({email});
+            const { title, body } = req.body
+            let name = req.params.id
+            const exisitingUser = await User.findOne({name});
             if (exisitingUser){
                 let todo = await Todo.create({ title, body, user: exisitingUser});
                 exisitingUser.Todo.push(todo);
                 exisitingUser.save();
                 res.status(200).json(todo);
+            }else{
+                console.log('user does not exist');
             }
         } catch(err) {
             console.log(err)
@@ -71,6 +75,19 @@ const TodoController = {
             return res.status(404).json({msg: 'todo is not found'})
         }
         res.status(200).json({ msg: "Todo Deleted" })
+    },
+    deleteAll: async(req,res) => {
+        try{
+            let todos = await Todo.find({});
+            if(!todos.length){
+                res.status(404).json({msg : 'No todos found currently'})
+            }else {
+                let todos = await Todo.deleteMany({});
+                return res.status(200).json({todos});
+            }
+        }catch(err){
+            console.log(err)
+        }
     }
 }
 

@@ -21,7 +21,7 @@ export default function Dropdown() {
 
   return (
     <>
-        <div class="relative"  ref={catMenu}>
+        <div className="relative"  ref={catMenu}>
             <button className="hover:text-red-500 active:text-red-700" onClick={() => setIsOpen((prev)=> !prev)}><BsPersonCircle className="size-6"/></button>
             {!!isOpen && (
                 <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }}>
