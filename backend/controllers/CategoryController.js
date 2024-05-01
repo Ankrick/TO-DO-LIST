@@ -8,7 +8,7 @@ const CategoryController = {
         try{
             let name = req.params.id
             const exisitingUser = await User.findOne({name});
-            const category = await Category.findOne({User: exisitingUser});
+            const category = await Category.find({User: exisitingUser});
             
             if(!category){
                 res.status(404).json({msg : 'Empty List'})
@@ -32,6 +32,19 @@ const CategoryController = {
                 console.log('login first');
             }
         } catch(err) {
+            console.log(err)
+        }
+    },
+    deleteAll: async(req,res) => {
+        try{
+            let categories = await Category.find({});
+            if(!categories.length){
+                res.status(404).json({msg : 'No todos found currently'})
+            }else {
+                let category = await Category.deleteMany({});
+                return res.status(200).json({category});
+            }
+        }catch(err){
             console.log(err)
         }
     }
