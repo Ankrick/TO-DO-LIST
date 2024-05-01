@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Todo = require('../models/todo');
 const User = require('../models/user');
+const Category = require('../models/category');
 const todo = require('../models/todo');
 
 const TodoController = {
@@ -8,7 +9,7 @@ const TodoController = {
         try{
             let name = req.params.id
             const exisitingUser = await User.findOne({name});
-            const todos = await Todo.find({user: exisitingUser});
+            const todos = await Todo.find({User: exisitingUser});
             
             if(!todos){
                 res.status(404).json({msg : 'Empty Todos List'})
@@ -20,16 +21,20 @@ const TodoController = {
     },
     create: async(req,res) => {
         try {
-            const { title, body } = req.body
+            const { title, body, category } = req.body
             let name = req.params.id
             const exisitingUser = await User.findOne({name});
+            const existingCategory = await Category.findOne({category});
+            console.log(existingCategory);
             if (exisitingUser){
-                let todo = await Todo.create({ title, body, user: exisitingUser});
+                let todo = await Todo.create({ title, body, category, User: exisitingUser});
                 exisitingUser.Todo.push(todo);
                 exisitingUser.save();
+                existingCategory.Todo.push(todo);
+                existingCategory.save();
                 res.status(200).json(todo);
             }else{
-                console.log('user does not exist');
+                console.log('login first');
             }
         } catch(err) {
             console.log(err)

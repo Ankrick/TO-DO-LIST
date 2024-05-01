@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    Category: [{
+        type: mongoose.Types.ObjectId,
+        ref: "Category"
+    }], 
     Todo: [{
         type: mongoose.Types.ObjectId,
         ref: "Todo"

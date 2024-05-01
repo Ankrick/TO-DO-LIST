@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const url = "mongodb+srv://Tristan:tristan@mern-cluster.rxfy8oz.mongodb.net/?retryWrites=true&w=majority&appName=MERN-Cluster"
 const authRoutes = require('./routes/auth');
 const todoRoutes = require('./routes/todos');
+const categoryRoutes = require('./routes/category');
 const cors = require('cors');
 const morgan = require('morgan');
 
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use(morgan('dev'))
 app.use('/user', authRoutes);
 app.use('/todo', todoRoutes);
+app.use('/category', categoryRoutes);
 
 }).catch((err) => {
     console.log(err)
