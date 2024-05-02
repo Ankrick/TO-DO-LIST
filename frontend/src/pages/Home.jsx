@@ -13,7 +13,8 @@ export default function Home() {
   let searchQuery = new URLSearchParams(location.search)
   let page = searchQuery.get('page');
   let user = "Ankrick" //replace w fetch user later
-  let [loading, setLoaidng] = useState(true);
+  let [category, setCategory] = useState([]);
+  let [loading, setLoading] = useState(true);
   let [todos, setTodos] = useState([]);
   let [hover, setHover] = useState(false);
 
@@ -22,11 +23,21 @@ export default function Home() {
   }
 
   useEffect(()=>{
+    let fetchCategory = async () => {
+      let response = await axios.get('http://localhost:3000/category/'+user)
+      let data = await response.data;
+      setCategory(data);
+      setLoading(false);
+    }
+  fetchCategory();
+  }, [page])
+
+  useEffect(()=>{
     let fetchTodos = async () => {
       let response = await axios.get('http://localhost:3000/todo/'+user)
       let data = await response.data;
       setTodos(data);
-      setLoaidng(false);
+      setLoading(false);
     }
   fetchTodos();
   }, [page])
@@ -35,30 +46,32 @@ export default function Home() {
   if (!!todos.length){
     return (
       <>
-        <div onPointerEnter={() => setHover(true)} onPointerLeave={() => setHover(false)} className='w-full max-w-md ml-10 p-12 space-y-6'>
-          <div className="justify-between item-center flex p-2">
-            <span className='mt-1 border-gray-500 border-2 p-1.5 rounded-md text-sm font-medium'>Daily Tasks</span>
-            {!!hover && (<motion.div initial={{ opacity: 0, scale: 1 }} animate={{ opacity: 1, scale: 1 }}>
-              <div className='text-gray-500 flex space-x-4'>
-                <button>
+        <div className="flex">
+          {category.map(cat => (<div onPointerEnter={() => setHover(true)} onPointerLeave={() => setHover(false)} className='w-full max-w-md ml-10 p-12 space-y-6'>
+            <div className="justify-between item-center flex p-2">
+              <span className='mt-1 border-gray-500 border-2 p-1.5 rounded-md text-sm font-medium'>{cat.category}</span>
+              {!!hover && (<motion.div initial={{ opacity: 0, scale: 1 }} animate={{ opacity: 1, scale: 1 }}>
+                <div className='text-gray-500 flex space-x-4'>
+                  <button>
+                    <BsThreeDots className='mt-4'/>
+                  </button>
+                  <Link to='/todo'>
+                    <IoAddSharp className='mt-3 size-6'/>
+                  </Link>
+                </div>
+              </motion.div>)}
+              {!hover && (<motion.div initial={{ opacity: 1, scale: 1 }} animate={{ opacity: 0, scale: 1 }}>
+                <div className='text-gray-500 flex space-x-4'>
                   <BsThreeDots className='mt-4'/>
-                </button>
-                <Link to='/todo'>
                   <IoAddSharp className='mt-3 size-6'/>
-                </Link>
-              </div>
-            </motion.div>)}
-            {!hover && (<motion.div initial={{ opacity: 1, scale: 1 }} animate={{ opacity: 0, scale: 1 }}>
-              <div className='text-gray-500 flex space-x-4'>
-                <BsThreeDots className='mt-4'/>
-                <IoAddSharp className='mt-3 size-6'/>
-              </div>
-            </motion.div>)}
-          </div>
-            {todos.map(todo => (
-                <TodoCard todo={todo} onDeleted={onDeleted}/>
-            )                       
-            )}
+                </div>
+              </motion.div>)}
+            </div>
+              {todos.map(todo => (
+                  <TodoCard todo={todo} onDeleted={onDeleted}/>
+              )
+              )}
+          </div>))}
         </div>
       </>
     )
