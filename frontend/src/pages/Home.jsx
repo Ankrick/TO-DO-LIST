@@ -13,6 +13,7 @@ export default function Home() {
   let searchQuery = new URLSearchParams(location.search)
   let page = searchQuery.get('page');
   let user = "Ankrick" //replace w fetch user later
+  let [loading, setLoaidng] = useState(true);
   let [todos, setTodos] = useState([]);
   let [hover, setHover] = useState(false);
 
@@ -25,6 +26,7 @@ export default function Home() {
       let response = await axios.get('http://localhost:3000/todo/'+user)
       let data = await response.data;
       setTodos(data);
+      setLoaidng(false);
     }
   fetchTodos();
   }, [page])
@@ -63,7 +65,7 @@ export default function Home() {
   }else{
     return (
       <>
-        <div className='mx-auto mt-4 flex flex-col space-y-10'>
+        {loading ? (<p className='mt-8 text-center'>loading...</p>) : (<div className='mx-auto mt-4 flex flex-col space-y-10'>
           <div className='text-center mt-36 text-6xl'>
             <div>Organize your</div>
             <p>work and life, finally.</p>
@@ -75,7 +77,7 @@ export default function Home() {
           <div className="text-center">
             <Link to='/todo' className='p-3 text-center text-white font-bold rounded-xl bg-red-500 hover:bg-red-700'>Add Task</Link>
           </div>
-        </div>
+        </div>)}
       </>
     )
   }
