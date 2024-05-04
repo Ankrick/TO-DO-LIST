@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion';
 import {useRef} from "react"
 
-export default function CategoryDrop({category, onCategoryChange}) {
+export default function CategoryDrop({category, categoryId, onCategoryChange}) {
 
   let [isOpen, setIsOpen] = useState(false);
-  let [selected, setSelected] = useState(category[0].category);
+  let existingCategory = category.filter((cat) => cat._id === categoryId)
+  let [selected, setSelected] = useState(existingCategory[0].category);
   const catMenu = useRef(null)
   const closeOpenMenus = (e)=>{
     if(isOpen && !catMenu.current?.contains(e.target)){
@@ -19,7 +20,14 @@ export default function CategoryDrop({category, onCategoryChange}) {
     onCategoryChange(cat.category);
   }
 
+  const closedCategoryMenus = (event) => {
+    if (catMenu.current && !catMenu.current.contains(event.target)) {
+      setIsOpen(false);
+      onCategoryChange(selected); // Pass selected outside of onSelected
+    }
+  };
 
+  document.addEventListener('mousedown',closedCategoryMenus)
   document.addEventListener('mousedown',closeOpenMenus)
 
   if(!!category.length){

@@ -16,11 +16,18 @@ export default function Home() {
   let [category, setCategory] = useState([]);
   let [loading, setLoading] = useState(true);
   let [todos, setTodos] = useState([]);
-  let [hover, setHover] = useState(false);
+  let [hover, setHover] = useState({});
 
   let onDeleted = (id) => {
     setTodos(prev => prev.filter(todo => todo._id !== id))
   }
+
+  let handleHover = (categoryId, isHovering) => {
+    setHover(prevState => ({
+      ...prevState,
+      [categoryId]: isHovering
+    }));
+  };
 
   useEffect(()=>{
     let fetchCategory = async () => {
@@ -47,20 +54,20 @@ export default function Home() {
     return (
       <>
         <div className="flex">
-          {category.map(cat => (<div onPointerEnter={() => setHover(true)} onPointerLeave={() => setHover(false)} className='w-full max-w-md ml-10 p-12 space-y-6'>
+          {category.map(cat => (<div onPointerEnter={() => handleHover(cat._id, true)} onPointerLeave={() => handleHover(cat._id, false)} key={cat._id} className='w-full max-w-md ml-10 p-12 space-y-6'>
             <div className="justify-between item-center flex p-2">
               <span className='mt-1 border-gray-500 border-2 p-1.5 rounded-md text-sm font-medium'>{cat.category}</span>
-              {!!hover && (<motion.div initial={{ opacity: 0, scale: 1 }} animate={{ opacity: 1, scale: 1 }}>
+              {!!hover[cat._id] && (<motion.div initial={{ opacity: 0, scale: 1 }} animate={{ opacity: 1, scale: 1 }}>
                 <div className='text-gray-500 flex space-x-4'>
                   <button>
                     <BsThreeDots className='mt-4'/>
                   </button>
-                  <Link to='/todo'>
+                  <Link to={`/todo/$`}>
                     <IoAddSharp className='mt-3 size-6'/>
                   </Link>
                 </div>
               </motion.div>)}
-              {!hover && (<motion.div initial={{ opacity: 1, scale: 1 }} animate={{ opacity: 0, scale: 1 }}>
+              {!hover[cat._id] && (<motion.div initial={{ opacity: 1, scale: 1 }} animate={{ opacity: 0, scale: 1 }}>
                 <div className='text-gray-500 flex space-x-4'>
                   <BsThreeDots className='mt-4'/>
                   <IoAddSharp className='mt-3 size-6'/>

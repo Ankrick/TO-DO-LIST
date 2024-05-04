@@ -1,6 +1,7 @@
 import {
   createBrowserRouter,
   RouterProvider,
+  useParams
 } from "react-router-dom";
 
 import React from 'react'
@@ -32,7 +33,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/todo",
-        element: <Todo/>
+        element: <Todo/>,
+      },
+      {
+        path: "/todo/:categoryId",
+        element: <Todo/>,
       }
     ]
   },

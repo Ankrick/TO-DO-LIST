@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import CategoryDrop from '../components/CategoryDrop'
 
 export default function Todo() {
+let { categoryId } = useParams();
 let name = 'Ankrick' //fetch from API later
 let [title, setTitle] = useState('');
 let [body, setBody] = useState('');
@@ -51,7 +52,7 @@ fetchCategory();
   return (
     <form className='mx-auto mt-14 max-w-md border-white p-4 bg-white p-5 shadow-lg flex flex-col space-y-3 rounded-2xl' onSubmit={submit}>
           <input value={title} onChange={e => setTitle(e.target.value)} className='py-3 ml-6 text-xl' type="text" placeholder='Title'></input>
-          {loading ? (<p className='ml-6'>Loading...</p>) : (<div className="ml-4"><CategoryDrop category={category} onCategoryChange={handleCategoryChange}/></div>)}
+          {loading ? (<p className='ml-6'>Loading...</p>) : (<div className="ml-4"><CategoryDrop category={category} categoryId={categoryId} onCategoryChange={handleCategoryChange}/></div>)}
           <textarea value={body} onChange={e => setBody(e.target.value)} className='py-3 ml-6' type="text" placeholder='body'></textarea>
           <button onClick={submit} className='mx-auto text-center w-full max-w-20 text-white font-bold rounded-lg bg-red-500'>Add</button>
     </form>
